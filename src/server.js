@@ -6,6 +6,7 @@ import productsRouter from './services/products/index.js'
 import { catchAllErrors, badRequestMiddleware, notFoundMiddleWare } from "./errorMiddlewares.js"
 import { getCurrentFolderPath } from "./lib/fs-tools.js"
 
+
 const {PORT} = process.env
 const server = express()
 const publicFolderPath = join(getCurrentFolderPath(import.meta.url), "../public")
