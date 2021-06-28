@@ -14,3 +14,4 @@ export const getCurrentFolderPath = currentFile => dirname(fileURLToPath(current
 
 export const writeProductsPicture = (fileName, content) => writeFile(join(productsPublicFolderPath, fileName), content)
 
+
