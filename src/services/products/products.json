@@ -1,0 +1,47 @@
+[
+  {
+    "name": "again2",
+    "description": "pc",
+    "brand": "Lenovo",
+    "imageUrl": "t.ly/LRFE",
+    "category": "laptop",
+    "updatedAt": "2021-06-28T10:22:35.891Z",
+    "_id": "76yfc1fkqggv0yg"
+  },
+  {
+    "_id": "76yfc15jkkqgh18v7",
+    "name": "styuiofsa",
+    "description": "pc",
+    "brand": "Lenovo",
+    "imageUrl": "t.ly/LRFE",
+    "category": "laptop",
+    "createdAt": "2021-06-28T10:21:33.090Z",
+    "updatedAt": "2021-06-28T10:30:12.136Z"
+  },
+  {
+    "_id": "76yfc15jkkqgh1eys",
+    "name": "thinkpad",
+    "description": "pc",
+    "brand": "Lenovo",
+    "imageUrl": "t.ly/LRFE",
+    "category": "laptop",
+    "createdAt": "2021-06-28T10:21:40.996Z",
+    "updatedAt": "2021-06-28T10:21:40.996Z"
+  },
+  {
+    "_id": "76yfc15jkkqgh1jdl",
+    "name": "asus",
+    "description": "pc",
+    "brand": "Lenovo",
+    "imageUrl": "t.ly/LRFE",
+    "category": "laptop",
+    "createdAt": "2021-06-28T10:21:46.713Z",
+    "updatedAt": "2021-06-28T10:21:46.713Z"
+  },
+  {
+    "_id": "76yfc15jkkqgh69qo",
+    "name": "helloo",
+    "createdAt": "2021-06-28T10:25:27.504Z",
+    "updatedAt": "2021-06-28T10:25:27.504Z"
+  }
+]
