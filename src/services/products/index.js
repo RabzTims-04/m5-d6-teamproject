@@ -3,7 +3,7 @@ import uniqid from 'uniqid'
 import createError from 'http-errors'
 import multer from "multer";
 import { extname } from "path"
-import { getProducts, writeProducts, writeProductsPicture } from "../../lib/fs-tools";
+import { getProducts, writeProducts, writeProductsPicture } from "../../lib/fs-tools.js";
 import { validationResult } from 'express-validator'
 
 
@@ -30,7 +30,7 @@ productsRouter.post('/:id/upload',multer().single("image"),async (req,res, next)
         console.log(req.body);
         const fileName = req.file.originalname.slice(-4)
         const newFileName = req.params.id.concat(fileName)
-        const url = `https://m5-blogpost.herokuapp.com/img/blogs/${req.params.id}${extname(req.file.originalname)}`
+        const url = `http://localhost:3002/img/products/${req.params.id}${extname(req.file.originalname)}`
         console.log(newFileName);
         await writeProductsPicture(newFileName, req.file.buffer)
         console.log(url);
@@ -58,3 +58,5 @@ productsRouter.post('/:id/upload',multer().single("image"),async (req,res, next)
 /* PUT a review */
 
 /* DELETE a review */
+
+export default productsRouter
