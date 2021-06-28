@@ -13,3 +13,4 @@ export const writeProducts = content => writeJSON(productsJSONPath, content)
 export const getCurrentFolderPath = currentFile => dirname(fileURLToPath(currentFile))
 
 export const writeProductsPicture = (fileName, content) => writeFile(join(productsPublicFolderPath, fileName), content)
+
