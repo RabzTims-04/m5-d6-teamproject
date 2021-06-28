@@ -1,74 +1,3 @@
-
-// import express from 'express'
-// import uniqid from 'uniqid'
-// import createError from 'http-errors'
-// import multer from 'multer'
-// import { extname } from 'path'
-// import { fileURLToPath } from 'url'
-// import { dirname, join } from 'path'
-// import fs from 'fs'
-
-// const productsRouter = express.Router()
-
-// const productsJSONPath = join(dirname(fileURLToPath(import.meta.url)),  'products.json')
-
-// const getProducts = ()=>{
-//     const content = fs.readFileSync(productsJSONPath)
-//     return JSON.parse(content)
-// }
-
-// const writeProducts = (content) => fs.writeFileSync(productsJSONPath, JSON.stringify(content))
-
-// productsRouter.get("/", (req, res)=>{
-//     const products = getProducts()
-//     res.send(products)
-
-// })
-// productsRouter.get("/:id", (req, res)=>{
-//     const products = getProducts()
-//     const product = products.find(u => u._id === req.params.id)
-//     res.send(product)
-// })
-
-// productsRouter.post("/", (req, res)=>{
-//      const { name, description, brand, imageUrl, price, category} = req.body
-//      const newProduct = {
-//          _id: uniqid(),
-//          name,
-//          description,
-//           brand, 
-//           imageUrl, 
-//           price, 
-//           category, 
-//           createdAt: new Date(),
-//           updatedAt: new Date()  }
-//     const products = getProducts()
-//     products.push(newProduct)
-//     writeProducts(products)
-//     res.status(201).send()
-// })
-// productsRouter.put("/:id", (req, res)=>{
-//     let products = getProducts()
-//     const productIndex = products.findIndex(pro => pro._id === req.params.id)
-//     if(!productIndex == -1){
-//         res.status(404).send({message: `Product with ${req.params.id} is not found! sayonara ;) `})
-//     } 
-//     const prevProductData = products[productIndex]
-//     const changedProduct = {...prevProductData, ...req.body, updatedAt: new Date(), _id: req.params.id}
-//     products[productIndex] = changedProduct
-//     writeProducts(products)
-//     res.send(changedProduct)
-
-
-// })
-// productsRouter.delete("/:id", (req, res)=>{
-//     const products = getProducts()
-//     const remainingProducts = products.filter(pro => pro._id !== req.params.id)
-//     writeProducts(remainingProducts)
-//     res.status(204).send()
-// })
-
-
 import express from "express";
 import uniqid from 'uniqid'
 import createError from 'http-errors'
@@ -83,18 +12,99 @@ const productsRouter = express.Router()
 /* *********************PRODUCTS************************* */
 
 /* GET all products */
+productsRouter.get("/", async (req, res, next)=>{
+    try {
+        const products = await getProducts()
+        res.send(products)
+    } catch (error) {
+        next(error)
+    }
+    
+})
 
 /* GET single product */
+productsRouter.get("/:id", async(req, res, next)=>{
+    try {
+        const products = await getProducts()
+        const product = products.find(u => u._id === req.params.id)
+        if(product){
+            res.send(product)
+        }
+        else{
+            next(createError(404, `Product with id: ${req.params.id} not found`))
+        }        
+    } catch (error) {   
+        next(error)
+    }
+})
 
 /* POST a product */
+productsRouter.post("/", async(req, res, next)=>{
+    try {
+        const errors = validationResult(req)
+        if(errors.isEmpty()){
+
+            const newProduct = {
+                ...req.body,
+                _id: uniqid(),
+                reviews:[],
+                createdAt: new Date()
+            }            
+            const products = await getProducts()
+            products.push(newProduct)
+            await writeProducts(products)
+            res.status(201).send({_id:newProduct._id})
+        }
+        else{
+            next(createError(400, {errorsList: errors}))
+        }
+    } catch (error) {
+        next(error)
+    }
+ })
 
 /* PUT a product */
+productsRouter.put("/:id", async (req, res, next)=>{
+    try {
+        let products = await getProducts()
+         const productIndex = products.findIndex(pro => pro._id === req.params.id)
+         if(productIndex !== -1){
+             let product = products[productIndex]
+              product={
+                  ...product,
+                  ...req.body,
+                  _id: req.params.id,
+                  updatedAt: new Date()
+              }
+              products[productIndex] = product
+              await writeProducts(products)
+              res.send(product)            
+         }
+         else{
+            next(createError(400, {errorsList: "error"}))
+         }
+        
+    } catch (error) {
+        next(error)
+    }       
+     })
 
 /* DELETE a product */
+productsRouter.delete("/:id", async(req, res, next)=>{
+    try {
+        const products = await getProducts()
+        const remainingProducts = products.filter(pro => pro._id !== req.params.id)
+        await writeProducts(remainingProducts)
+        res.status(200).send(`product with id: ${req.params.id} Deleted successfully`)        
+        
+    } catch (error) {
+        next(error)
+    }
+    })
 
 /* *********************Search product************************* */
 
-productsRouter.get("/search",checkSearchSchema,checkValidationResult, async (req, res, next) => {
+productsRouter.get("/search",checkSearchSchema, async (req, res, next) => {
     try {
         const {category} = req.query
         const products = await getProducts()
