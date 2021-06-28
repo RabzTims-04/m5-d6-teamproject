@@ -4,8 +4,7 @@ import createError from 'http-errors'
 import multer from "multer";
 import { extname } from "path"
 import { getProducts, writeProducts, writeProductsPicture } from "../../lib/fs-tools.js";
-import { validationResult } from 'express-validator'
-
+import { checkSearchSchema, checkValidationResult } from "./validation.js";
 
 const productsRouter = express.Router()
 
@@ -20,6 +19,20 @@ const productsRouter = express.Router()
 /* PUT a product */
 
 /* DELETE a product */
+
+/* *********************Search product************************* */
+
+productsRouter.get("/search",checkSearchSchema,checkValidationResult, async (req, res, next) => {
+    try {
+        const {category} = req.query
+        const products = await getProducts()
+        const filtered = products.filter(product => product.category.toLowerCase().includes(category.toLowerCase()))
+        res.send(filtered)
+        
+    } catch (error) {
+        next(error)
+    }
+})
 
 /* *********************POST Image of product************************* */
 
