@@ -5,7 +5,7 @@ import multer from "multer";
 import { extname } from "path"
 import { validationResult } from 'express-validator'
 import { getProducts, writeProducts, writeProductsPicture } from "../../lib/fs-tools.js";
-import { checkSearchSchema, checkValidationResult } from "./validation.js";
+import { checkSearchSchema, checkReviewSchema, checkValidationResult } from "./validation.js";
 
 const productsRouter = express.Router()
 
@@ -103,7 +103,7 @@ productsRouter.get("/:id/reviews/:revId", async (req, res, next) => {
 
 /* POST a review */
 
-productsRouter.post("/:id/reviews", async (req, res, next) => {
+productsRouter.post("/:id/reviews",checkReviewSchema,checkValidationResult, async (req, res, next) => {
     try {
         const errors = validationResult(req)
 
@@ -132,7 +132,7 @@ productsRouter.post("/:id/reviews", async (req, res, next) => {
 })
 
 /* PUT a review */
-productsRouter.put('/:id/reviews/:revId',async (req,res, next)=>{
+productsRouter.put('/:id/reviews/:revId',checkReviewSchema,checkValidationResult,async (req,res, next)=>{
     
     try {
             const products = await getProducts()

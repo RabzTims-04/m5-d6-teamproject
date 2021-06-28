@@ -1,5 +1,19 @@
 import { checkSchema, validationResult } from "express-validator";
 
+const reviewSchema = {
+    comment:{
+        in:["body"],
+        isString:{
+            errorMessage: "comment should be a string"
+        }
+    },
+    rate:{
+        in:["body"],
+        isNumeric:{
+            errorMessage: "rating should be numeric"
+        }
+    }
+}
 
 
 const searchSchema = {
@@ -12,6 +26,7 @@ const searchSchema = {
 }
 
 export const checkSearchSchema = checkSchema(searchSchema)
+export const checkReviewSchema = checkSchema(reviewSchema)
 
 export const checkValidationResult = (req, res, next) =>{
     const errors = validationResult(req)
