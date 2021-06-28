@@ -3,6 +3,8 @@ import uniqid from 'uniqid'
 import createError from 'http-errors'
 import multer from "multer";
 import { extname } from "path"
+import { getProducts, writeProducts, writeProductsPicture } from "../../lib/fs-tools";
+import { validationResult } from 'express-validator'
 
 
 const productsRouter = express.Router()
@@ -18,6 +20,32 @@ const productsRouter = express.Router()
 /* PUT a product */
 
 /* DELETE a product */
+
+/* *********************POST Image of product************************* */
+
+/* POST an Image to a specific product */
+productsRouter.post('/:id/upload',multer().single("image"),async (req,res, next)=>{
+
+    try { 
+        console.log(req.body);
+        const fileName = req.file.originalname.slice(-4)
+        const newFileName = req.params.id.concat(fileName)
+        const url = `https://m5-blogpost.herokuapp.com/img/blogs/${req.params.id}${extname(req.file.originalname)}`
+        console.log(newFileName);
+        await writeProductsPicture(newFileName, req.file.buffer)
+        console.log(url);
+        const products = await getProducts()
+        const product = products.find(product => product._id === req.params.id)
+        if(product){
+            product.image = url
+            await writeProducts(products)
+        }
+        res.send(product.image)      
+        
+    } catch (error) {
+        next(error)
+    }
+})
 
 /* *********************REVIEWS************************* */
 
