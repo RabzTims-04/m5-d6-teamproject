@@ -9,6 +9,23 @@ import { checkSearchSchema, checkReviewSchema, checkValidationResult } from "./v
 
 const productsRouter = express.Router()
 
+/* *********************Search product************************* */
+
+productsRouter.get("/search",checkSearchSchema,checkValidationResult, async (req, res, next) => {
+    try {
+        console.log(req);
+        let { category } = req.query
+        console.log(category);
+        const products = await getProducts()
+        const filtered = products.filter(product => product.category.toLowerCase().includes(category.toLowerCase()))
+        console.log(filtered);
+        res.send(filtered)
+        
+    } catch (error) {
+        next(error)
+    }
+})
+
 /* *********************PRODUCTS************************* */
 
 /* GET all products */
@@ -33,7 +50,7 @@ productsRouter.get("/:id", async(req, res, next)=>{
         else{
             next(createError(404, `Product with id: ${req.params.id} not found`))
         }        
-    } catch (error) {   
+    } catch (error) {
         next(error)
     }
 })
@@ -102,19 +119,6 @@ productsRouter.delete("/:id", async(req, res, next)=>{
     }
     })
 
-/* *********************Search product************************* */
-
-productsRouter.get("/search",checkSearchSchema, async (req, res, next) => {
-    try {
-        const {category} = req.query
-        const products = await getProducts()
-        const filtered = products.filter(product => product.category.toLowerCase().includes(category.toLowerCase()))
-        res.send(filtered)
-        
-    } catch (error) {
-        next(error)
-    }
-})
 
 /* *********************POST Image of product************************* */
 
